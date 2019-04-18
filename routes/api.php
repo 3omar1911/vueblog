@@ -24,3 +24,7 @@ Route::group(['prefix' => 'posts'], function() {
 	Route::put('{id}', "PostsController@update");
 	Route::delete('{id}', "PostsController@destroy");
 });
+
+Route::group(['prefix' => 'tags'], function() {
+	Route::get('', "TagsController@index");
+});

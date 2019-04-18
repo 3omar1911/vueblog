@@ -6,9 +6,15 @@ use Illuminate\Http\Request;
 use App\Post;
 class PostsController extends Controller
 {
-	public function index()
+	public function index(Request $request)
 	{
-		$posts = Post::orderBy('id', 'desc')->get();
+		$posts = Post::orderBy('id', 'desc');
+		if($request->filled('tag')) {
+			$posts = $posts->whereHas('tags', function($query) {
+				$query->where('tags.title', request()->tag);
+			});
+		}
+		$posts = $posts->get();
 		return response()->json($posts);
 	}
 
@@ -38,7 +44,11 @@ class PostsController extends Controller
 
 	public function getPostData($id)
 	{
-		return response()->json(Post::find($id));
+		$post = Post::find($id);
+		return response()->json([
+			'post' => $post,
+			'tags' => $post->tags,
+		]);
 	}
 
 	public function destroy($id)
