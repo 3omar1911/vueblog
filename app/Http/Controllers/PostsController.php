@@ -8,7 +8,7 @@ class PostsController extends Controller
 {
 	public function index(Request $request)
 	{
-		$posts = Post::orderBy('id', 'desc');
+		$posts = Post::with('tags')->orderBy('id', 'desc');
 		if($request->filled('tag')) {
 			$posts = $posts->whereHas('tags', function($query) {
 				$query->where('tags.title', request()->tag);
